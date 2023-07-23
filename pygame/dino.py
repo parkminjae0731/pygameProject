@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 pygame.init()
 pygame.display.set_caption("Jumping dino")
 MAX_WIDTH = 800
@@ -49,10 +50,12 @@ def main():
     imgbird = pygame.image.load("bird.png")
     bird_height = imgbird.get_size()[1]
     bird_x = MAX_WIDTH
-    bird_y = MAX_HEIGHT - 261
+    bird_y = MAX_HEIGHT - 259
     score = 0
     font_text = pygame.font.SysFont(None, 30)
     while True:
+        a = 10
+        b = 15
         screen.fill((255, 255, 255))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,7 +64,7 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if is_bottom:
                     is_go_up = True
-                    is_bottom = False
+                is_bottom = False
         if is_go_up:
             dino_y -= 10.0
         elif not is_go_up and not is_bottom:
@@ -71,8 +74,10 @@ def main():
         if not is_bottom and dino_y >= dino_bottom:
             is_bottom = True
             dino_y = dino_bottom
-        tree_x -= 14
-        bird_x -= 3.54
+
+        tree_x -= b
+
+        bird_x -= a
         if tree_x <= 0:
             tree_x = MAX_WIDTH
             score += 1
@@ -82,6 +87,9 @@ def main():
             score += 1
         screen.blit(imgbird, (bird_x, bird_y))
 
+        if score >= 20:
+            a += 3
+            b += 3
         if leg_swap:
             screen.blit(imgDino1, (dino_x, dino_y))
             leg_swap = False
@@ -108,6 +116,9 @@ def main():
 
         score_text = font_text.render(str(score), True, (0, 0, 0))
         screen.blit(score_text, (MAX_WIDTH / 2 - score_text.get_width() / 2, 10))
+        pygame.display.flip()
+        score_text = font_text.render(str(a), True, (0, 0, 0))
+        screen.blit(score_text, (MAX_WIDTH / 3 - score_text.get_width() / 2, 10))
         pygame.display.flip()
         pygame.display.update()
         fps.tick(30)
