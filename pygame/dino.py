@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import random
 
 pygame.init()
 pygame.display.set_caption("Jumping dino")
@@ -21,11 +21,16 @@ def check_collision(
     bird_y,
     bird_width,
     bird_height,
+    stone_x,
+    stone_y,
+    stone_width,
+    stone_height,
 ):
     dino_rect = pygame.Rect(dino_x, dino_y, dino_width, dino_height)
     tree_rect = pygame.Rect(tree_x, tree_y, tree_width, tree_height)
     bird_rect = pygame.Rect(bird_x, bird_y, bird_width, bird_height)
-    if dino_rect.colliderect(tree_rect) or dino_rect.colliderect(bird_rect):
+    stone_rect = pygame.Rect(stone_x, stone_y, stone_width, stone_height)
+    if dino_rect.colliderect(tree_rect) or dino_rect.colliderect(bird_rect) or dino_rect.colliderect(stone_rect) :
         return True
     return False
 
@@ -52,19 +57,30 @@ def main():
     bird_x = MAX_WIDTH
     bird_y = MAX_HEIGHT - 259
     score = 0
+    imgStone = pygame.image.load("stone.png")
+    stone_x = random.randint(0,800)
+    stone_y = MAX_HEIGHT
     font_text = pygame.font.SysFont(None, 30)
+    b= random.randint(7, 70)
+    c=0
     while True:
-        a = 10
-        b = 15
+        key_event = pygame.key.get_pressed()
+        a = 11
+        if score>c:
+            c=score
         screen.fill((255, 255, 255))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
+            elif key_event[pygame.K_SPACE]:
                 if is_bottom:
                     is_go_up = True
                 is_bottom = False
+            elif key_event[pygame.K_RIGHT]:
+                dino_x +=20
+            elif key_event[pygame.K_LEFT]:
+                dino_x -=20    
         if is_go_up:
             dino_y -= 10.0
         elif not is_go_up and not is_bottom:
@@ -74,29 +90,58 @@ def main():
         if not is_bottom and dino_y >= dino_bottom:
             is_bottom = True
             dino_y = dino_bottom
-
-        tree_x -= b
-
-        bird_x -= a
+        if score >= 5:
+            a += 1
+            
+        if score >= 10:
+            a += 2
+            
+        if score >= 15:
+            a += 1
+            
+        if score >= 20:
+            a += 2
+            
+        if score >= 25:
+            a += 1
+        if score >= 30:
+            a += 2
+            
+        if score >= 35:
+            a += 1
+            
+        if score >= 40:
+            a += 1
+        
+        if score >= 45:
+            a += 1
+            
+        if score >= 50:
+            a += 2
+            
+        tree_x -= a
+        bird_x -= b
+        stone_y += 10
         if tree_x <= 0:
             tree_x = MAX_WIDTH
             score += 1
         screen.blit(imgTree, (tree_x, tree_y))
-        if bird_x <= 0:
-            bird_x = MAX_WIDTH
-            score += 1
+        if bird_x <= 0 :
+            bird_x = MAX_WIDTH 
+            b = random.randint(7, 70)
+            score += 0.5
         screen.blit(imgbird, (bird_x, bird_y))
-
-        if score >= 20:
-            a += 3
-            b += 3
+        if stone_y <= 0 :
+            stone_x = MAX_WIDTH 
+            score += 0.5
+        screen.blit(imgbird, (stone_x, stone_y))
         if leg_swap:
             screen.blit(imgDino1, (dino_x, dino_y))
             leg_swap = False
         else:
             screen.blit(imgDino2, (dino_x, dino_y))
             leg_swap = True
-
+       
         if check_collision(
             dino_x,
             dino_y,
@@ -110,15 +155,22 @@ def main():
             bird_y,
             imgbird.get_width(),
             imgbird.get_height(),
+            stone_x,
+            stone_y,
+            imgStone.get_width(),
+            imgStone.get_height(),
+            
         ):
-            pygame.quit()
-            sys.exit()
+          score =0
 
         score_text = font_text.render(str(score), True, (0, 0, 0))
         screen.blit(score_text, (MAX_WIDTH / 2 - score_text.get_width() / 2, 10))
+        pygame.display.flip()              
+        score_text = font_text.render(str(a), True, (255, 0, 0))
+        screen.blit(score_text, (MAX_WIDTH / 20 - score_text.get_width() / 2, 10))
         pygame.display.flip()
-        score_text = font_text.render(str(a), True, (0, 0, 0))
-        screen.blit(score_text, (MAX_WIDTH / 3 - score_text.get_width() / 2, 10))
+        score_text = font_text.render(str(c), True, (0, 0, 255))
+        screen.blit(score_text, (MAX_WIDTH / 1.2 - score_text.get_width() / 2, 10))
         pygame.display.flip()
         pygame.display.update()
         fps.tick(30)
