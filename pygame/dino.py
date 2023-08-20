@@ -55,11 +55,12 @@ def main():
     imgbird = pygame.image.load("bird.png")
     bird_height = imgbird.get_size()[1]
     bird_x = MAX_WIDTH
-    bird_y = MAX_HEIGHT - 259
+    bird_y = MAX_HEIGHT -259
     score = 0
     imgStone = pygame.image.load("stone.png")
+    stone_height = imgStone.get_size()[1]
     stone_x = random.randint(0,800)
-    stone_y = MAX_HEIGHT
+    stone_y = 0
     font_text = pygame.font.SysFont(None, 30)
     b= random.randint(7, 70)
     c=0
@@ -77,10 +78,10 @@ def main():
                 if is_bottom:
                     is_go_up = True
                 is_bottom = False
-            elif key_event[pygame.K_RIGHT]:
-                dino_x +=20
-            elif key_event[pygame.K_LEFT]:
-                dino_x -=20    
+            elif key_event[pygame.K_RIGHT] and dino_x < MAX_WIDTH-50:
+                dino_x +=40
+            elif key_event[pygame.K_LEFT] and dino_x >0:
+                dino_x -=40    
         if is_go_up:
             dino_y -= 10.0
         elif not is_go_up and not is_bottom:
@@ -131,10 +132,11 @@ def main():
             b = random.randint(7, 70)
             score += 0.5
         screen.blit(imgbird, (bird_x, bird_y))
-        if stone_y <= 0 :
-            stone_x = MAX_WIDTH 
+        if stone_y >= MAX_HEIGHT :
+            stone_x = random.randint(0,800) 
+            stone_y = 0
             score += 0.5
-        screen.blit(imgbird, (stone_x, stone_y))
+        screen.blit(imgStone, (stone_x, stone_y))
         if leg_swap:
             screen.blit(imgDino1, (dino_x, dino_y))
             leg_swap = False
