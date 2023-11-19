@@ -1,33 +1,36 @@
-import pygame, sys, random
+import pygame
+
+# pygame 기본 설정
 pygame.init()
-clock = pygame.time.Clock()
 pygame.display.set_caption("shotting game")
-screen_width = 540
-screen_height = 850
+
+screen_width = 320
+screen_height = 640
 screen = pygame.display.set_mode((screen_width, screen_height))
-bg_color = pygame.Color(255, 255, 255)
-player_speed_x=0
-player_speed_y=0
-while True:
+
+background = pygame.image.load("background.png")
+
+clock = pygame.time.Clock()
+running = True
+frame = 0
+
+background_positionX = 0
+background_positionY = 0
+
+while running:
+    frame += 1
+    screen.fill((0,0,0))
+    background_positionY -= 1
+    if background_positionY < -640:
+        background_positionY = (-640)
+    screen.blit(background, (background_positionX, background_positionY))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                player_speed_y += 4
-            if event.key == pygame.K_UP:
-                player_speed_y -= 4
-            if event.key == pygame.K_RIGHT:
-                player_speed_x += 4
-            if event.key == pygame.K_LEFT:
-                player_speed_x -= 4
-
-
-    screen.fill(bg_color)
-    pygame.display.flip()
-    clock.tick(60)
+            running = False
+    
     pygame.display.update()
+    clock.tick(60)
+    
 
 
 
