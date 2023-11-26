@@ -9,25 +9,71 @@ screen_height = 640
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 background = pygame.image.load("background.png")
+background = pygame.transform.smoothscale(background,(1920,1080))
+
+posx=screen_width//2
+posy=screen_height-100
+rad=14
+playercolor = (100,100,255)
+hp = 100
+speed=5
+engage=5
+
+background_positionY = screen_height - 1080
+FLAG_DOWN = False
+FLAG_UP = False
+FLAG_RIGHT = False
+FLAG_LEFT = False
 
 clock = pygame.time.Clock()
 running = True
 frame = 0
 
-background_positionX = 0
-background_positionY = 0
-
 while running:
     frame += 1
     screen.fill((0,0,0))
-    background_positionY -= 1
-    if background_positionY < -640:
-        background_positionY = (-640)
-    screen.blit(background, (background_positionX, background_positionY))
+    background_positionY += 0.2
+    screen.blit(background, (-1100, background_positionY))
+    if background_positionY >= 0:
+        background_positionY = 0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                FLAG_DOWN = True
+            if event.key == pygame.K_UP:
+                FLAG_UP = True
+            if event.key == pygame.K_RIGHT:
+                FLAG_RIGHT = True
+            if event.key == pygame.K_LEFT:
+                FLAG_LEFT = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_DOWN:
+                FLAG_DOWN = False
+            if event.key == pygame.K_UP:
+                FLAG_UP = False
+            if event.key == pygame.K_RIGHT:
+                FLAG_RIGHT = False
+            if event.key == pygame.K_LEFT:
+                FLAG_LEFT = False
+    if FLAG_DOWN == True:
+        posy += speed
+    if FLAG_UP == True:
+        posy -= speed
+    if FLAG_RIGHT == True:
+        posx += speed
+    if FLAG_LEFT == True:
+        posx -= speed        
+    if posx >= 306:
+        posx=306
+    if posx <=14:
+        posx=14
+    if posy >=626:
+        posy=626
+    if posy <=14:
+        posy =14   
+    pygame.draw.circle(screen,playercolor,(posx,posy),rad)
     pygame.display.update()
     clock.tick(60)
     
@@ -40,7 +86,3 @@ while running:
 
 
 
-#몹:색깔로 구분,색깔마다 다른공격(직선,대각선,곡선,4방향,8방향등)
-#맵:일정시간버틴다->랜덤으로 이동 예:파란방,빨간방중 하나로 이동
-#방마다 몹 정해져있음
-#플래이어:맞으면 죽음 
