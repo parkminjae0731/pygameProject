@@ -11,16 +11,16 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 background = pygame.image.load("background.png")
 background = pygame.transform.smoothscale(background, (1920, 1080))
 
-posx=screen_width//2
-posy=screen_height-100
-rad=14
+posx = screen_width //2
+posy = screen_height - 100
+rad = 14
 playercolor = (100, 100, 255)
 bulletcolor = (100, 100, 255)
 hp = 100
-speed=5
-engage=5
-bulletx = posx
-bullety = posy
+speed = 5
+engage = 5
+bulletx = screen_width // 2
+bullety = screen_height - 100
 
 background_positionY = screen_height - 1080
 FLAG_DOWN = False
@@ -33,6 +33,7 @@ running = True
 frame = 0
 
 while running:
+     
     frame += 1
     screen.fill((0,0,0))
     background_positionY += 0.2
@@ -74,10 +75,17 @@ while running:
         posx += speed
     if FLAG_LEFT == True:
         posx -= speed        
+    if FLAG_DOWN == True and shot == False:
+        bullety += speed
+    if FLAG_UP == True and shot == False:
+        bullety -= speed
+    if FLAG_RIGHT == True and shot == False:
+        bulletx += speed
+    if FLAG_LEFT == True and shot == False:
+        bulletx -= speed 
     if shot == True:
-        
-        pygame.draw.circle(screen, bulletcolor, (posx, posy),30)
-    
+        pygame.draw.circle(screen, bulletcolor, (bulletx, bullety),7)
+        bullety -=1
     if posx >= 306:
         posx=306
     if posx <=14:
