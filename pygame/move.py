@@ -39,7 +39,7 @@ while True:
     if key_event[pygame.K_DOWN] and pos_y <SCREEN_HEIGHT-10:
         pos_y +=5
 
-    screen.fill(black)
+    screen.fill((black))
     pygame.draw.circle(screen,white,(pos_x,pos_y),10)
     pygame.display.update()
     pos_y +=3

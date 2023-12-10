@@ -16,9 +16,7 @@ posy = screen_height - 100
 rad = 14
 playercolor = (100, 100, 255)
 bulletcolor = (100, 100, 255)
-hp = 100
 speed = 5
-engage = 5
 bulletx = screen_width // 2
 bullety = screen_height - 100
 
@@ -30,19 +28,19 @@ FLAG_LEFT = False
 shot = False
 clock = pygame.time.Clock()
 running = True
-frame = 0
+
 
 while running:
-     
-    frame += 1
-    screen.fill((0,0,0))
     background_positionY += 0.2
     screen.blit(background, (-1100, background_positionY))
+
     if background_positionY >= 0:
         background_positionY = 0
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
                 FLAG_DOWN = True
@@ -54,6 +52,7 @@ while running:
                 FLAG_LEFT = True
             if event.key == pygame.K_SPACE:
                 shot = True
+                
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 FLAG_DOWN = False
@@ -75,6 +74,7 @@ while running:
         posx += speed
     if FLAG_LEFT == True:
         posx -= speed        
+    
     if FLAG_DOWN == True and shot == False:
         bullety += speed
     if FLAG_UP == True and shot == False:
@@ -85,15 +85,17 @@ while running:
         bulletx -= speed 
     if shot == True:
         pygame.draw.circle(screen, bulletcolor, (bulletx, bullety),7)
-        bullety -=1
+        bullety -= 10
+    
+    
     if posx >= 306:
-        posx=306
-    if posx <=14:
-        posx=14
-    if posy >=626:
-        posy=626
-    if posy <=14:
-        posy =14       
+        posx = 306
+    if posx <= 14:
+        posx = 14
+    if posy >= 626:
+        posy = 626
+    if posy <= 14:
+        posy = 14       
     pygame.draw.circle(screen, playercolor, (posx, posy), rad)
     pygame.display.update()
     clock.tick(60)

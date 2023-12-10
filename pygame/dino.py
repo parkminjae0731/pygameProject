@@ -62,8 +62,8 @@ def main():
     stone_x = random.randint(0,800)
     stone_y = 0
     font_text = pygame.font.SysFont(None, 30)
-    b= random.randint(7, 70)
-    c=0
+    b = random.randint(7, 70)
+    c = 0
     while True:
         key_event = pygame.key.get_pressed()
         a = 11
@@ -91,6 +91,7 @@ def main():
         if not is_bottom and dino_y >= dino_bottom:
             is_bottom = True
             dino_y = dino_bottom
+
         if score >= 5:
             a += 1
             
@@ -163,7 +164,7 @@ def main():
             imgStone.get_height(),
             
         ):
-          score =0
+          score = 0
 
         score_text = font_text.render(str(score), True, (0, 0, 0))
         screen.blit(score_text, (MAX_WIDTH / 2 - score_text.get_width() / 2, 10))
