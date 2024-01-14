@@ -1,5 +1,8 @@
 import pygame as pg
 import random
+# 1. 마우스 버튼 눌렀을때 망치그림 바꾸기
+# 2. 토끼 제한시간 이상 지나면 들어가게 하기
+# 3. 시간 얼마 안남았을 때 텍스트 색깔 바꾸기
 
 pg.init()
 screen = pg.display.set_mode((735, 818))
@@ -9,6 +12,8 @@ mole_img=pg.image.load("mole.png")
 mole_img = pg.transform.scale(mole_img, (246,205))
 hammer_img = pg.image.load("hammer.png")
 hammer_img = pg.transform.scale(hammer_img, (80,80))
+hammer2_img = pg.image.load("hammer 2.png")
+hammer2_img = pg.transform.scale(hammer2_img, (80,80))
 fail_img = pg.image.load("fail.png")
 success_img = pg.image.load("success.png")
 
@@ -30,22 +35,32 @@ while running:
     
     screen.blit(background_img, background_img.get_rect())
     
-    # (1) 시간 및 점수를 문자열 객체로 변환해 변수에 넣어 주세요. (글자색상 자유, 앤티앨리어싱 True, 배경색 없음)
+    #점수와 초를 나타내는 코드
     time_text = font.render(str(pg.time.get_ticks() // 1000)
     + "초", True, (0,0,0), None)
     score_text = font.render(str(score) + "점", True, (0,0,0), None)
     
+    if limit_time - pg.time.get_ticks() // 1000 <= 5:
+        time_text = font.render(str(pg.time.get_ticks() // 1000)
+        + "초", True, (255,0,0), None)
+        score_text = font.render(str(score) + "점", True, (255,0,0), None)
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
         
-        # (2) 화면 내에 마우스가 클릭되면 점수를 1씩 증가시키는 코드를 작성해 주세요. 
+        # 두더지를 클릭했을때 점수를 올리는 코드
         if event.type == pg.MOUSEBUTTONDOWN:
-            if mole.collidepoint(event.pos):
+            hammer_img = hammer2_img
+            for mole in moles:
+                if mole.collidepoint(event.pos):
                     moles.remove(mole)
                     score += 1
                     break
-        
+        elif event.type == pg.MOUSEBUTTONUP:
+            hammer_img = pg.image.load("hammer.png")
+            hammer_img = pg.transform.scale(hammer_img, (80,80))
+    
     if (pg.time.get_ticks() // 1000) % 2 == 0:
         if check_time:
             add_mole = screen.blit(mole_img, random.choice(moles_pos))
@@ -54,12 +69,14 @@ while running:
     else:
         check_time = True
     
+    
+    
     for mole in moles:
         screen.blit(mole_img, mole)
 
 
     
-    # (3) 시간과 점수를 화면에 표시하는 코드를 작성해 주세요.
+    # 화면에 시간과 점수를 보여주는 코드
     screen.blit(time_text, (660,55))
     screen.blit(score_text, (55,55))
     
@@ -79,3 +96,6 @@ while running:
     pg.display.update()
 
 pg.quit()
+    
+    
+ 
